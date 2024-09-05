@@ -1,0 +1,32 @@
+Relatorio Search,Query,OBS
+Solicitações Novas,created:2024-08-30 AND NOT requester.name:System (**Obs.: Somar rejeitadas, canceladas, processadas e pendentes),mudar o filtro para account activity
+Solicitações Aprovadas,name:"Request Access Approved" AND created:2024-09-03,Remover duplicados (numero de requisicao)
+Solicitações Reprovadas,name:"Request Access Rejected" AND created:2024-09-03,Remover duplicados (numero de requisicao)
+Solicitações Cancelada,name:"Request Access Cancelled" AND created:2024-09-03,Remover duplicados (numero de requisicao)
+Solicitações Processadas,created:2024-09-xx AND NOT requester.name:System AND NOT status:Pending,mudar o filtro para account activity
+Solicitações Finalizadas sem erro,created:2024-09-xx AND NOT requester.name:System AND status:Complete,mudar o filtro para account activity
+Solicitações Pendentes,created:2024-09-xx AND NOT requester.name:System AND status:Pending,mudar o filtro para account activity
+Solicitações finalizadas com erro ou falha,created:2024-09-xx AND NOT requester.name:System AND NOT (status:Pending OR status:Complete),mudar o filtro para account activity
+Solicitações com erro ou falha (geral),created:[2024-09-xx TO now] AND (FAIL OR ERROR OR WARNING), 
+Solicitacoes criadas no ultimo dia,type:ACCESS_REQUEST AND operation:CREATE AND created:[2024-09-xx TO now], 
+Adições de Direitos com sucesso,name:" Add Entitlement Passed" AND NOT actor.name:System AND created:2024-09-xx,Remover duplicados (target) - Filtro Eventos
+Adições de Direitos com erro ou falha,name:" Add Entitlement Failed" AND NOT actor.name:System AND created:2024-09-xx,Remover duplicados (target) - Filtro Eventos
+Solicitacoes com erro na ultima hora,created:[now-1h TO now] AND (FAIL OR ERROR OR WARNING), 
+Autenticacão de usuários com sucesso,type:AUTH AND status:PASSED AND created:2024-09-xx AND NOT (actor.name:System OR actor.name:Unknown) AND (operation:RECEIVE OR operation:REQUEST), 
+Autenticacão de usuários com erro ou falha,type:AUTH AND status:FAILED AND created:2024-09-xx AND NOT (actor.name:System OR actor.name:Unknown) AND (operation:RECEIVE OR operation:REQUEST), 
+Contas criadas com sucesso,type:PROVISIONING AND NOT (source.name:IdentityNow OR technicalName:IDENTITY_STATE_CHANGE_PASSED OR technicalName:IDENTITY_LIFECYCLE_CHANGE_PASSED) AND  technicalName:ACCOUNT_CREATE_PASSED, 
+Envio de e-mail com sucesso,email AND operation:SEND AND status:PASSED AND created:2024-09-xx,Filtro Eventos
+Envio de e-mail com erro ou falha,email AND operation:SEND AND status:FAILED AND created:2024-09-xx, 
+Identidades Inativa com conta Azure Ativa,attributes.cloudLifecycleState:"inactive" AND @accounts(source.name:"msazureactivedirectory" AND disabled:false), 
+Identidades Inativa com conta AD Onprem Ativa,attributes.cloudLifecycleState:"inactive" AND @accounts(source.name:"Corp - Onprime" AND disabled:false), 
+Identidades Ativas sem Gestor Imediato,NOT _exists_:manager.id AND attributes.cloudLifecycleState:Active,mudar o filtro para identity
+Todas identidades sem Gestor Imediato,NOT _exists_:manager.id, 
+Identidades ativas sem conta no Azure (Descorrelacionada),attributes.cloudLifecycleState:"active" AND NOT @accounts(source.name:"msazureactivedirectory"), 
+Donos de grupos de governança desligados (Resultado agregado),@access(attribute:"Governance Groups") AND attributes.cloudLifecycleState:inactive, 
+Listagem de estagiários e aprendiz que possuem acessos na Azure,(attributes.title:APRENDIZ OR attributes.title:ESTAGIARIO) AND @accounts(source.name:msazureactivedirectory), 
+Funcionários desligados com Contas AD-Corp Ativas,attributes.cloudLifecycleState:"inactive" AND @accounts(source.name:"Corp - Onprime" AND disabled:false), 
+Funcionários desligados com Contas Azure Ativas,attributes.cloudLifecycleState:"inactive" AND @accounts(source.name:"MsAzureActivedirectory" AND disabled:false), 
+Aprovacoes que foram delegadas,(technicalName:ACCESS_REQUEST_APPROVAL_FORWARD_PASSED OR technicalName:ACCESS_REQUEST_FORWARDED) AND (operation:FORWARD OR operation:REQUEST) AND _exists_:attributes.newOwner AND created:2024-09-03, 
+usuarios que possuem mais de um grupo do Sailpoint,attributes.cloudLifecycleState:active AND roleCount:>=2, 
+Puxar grupos de governança,source.name:sailpoint AND attribute:"governance groups",mudar indice para direitos
+Aprova'coes que foram escaladas,_exists_:attributes.newOwner AND technicalName:ACCESS_REQUEST_ESCALATED  AND created:2024-09-05,
